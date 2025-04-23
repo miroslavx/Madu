@@ -11,21 +11,16 @@ namespace Snake
     {
         static void Main(string[] args)
         {
-            Point p1 = new Point();
-            p1.x = 1;
-            p1.y = 3;
-            p1.sym = '*';
-            p1.Draw();
 
-            // Создаем второй объект класса Point
-            Point p2 = new Point();
-            p2.x = 4;
-            p2.y = 5;
-            p2.sym = '#';
-            // Вызываем метод Draw() для объекта p2
-            p2.Draw();
+            Point p1 = new Point(1, 3, '*');
+
+            p1.Draw(); 
+            Point p2 = new Point(4, 5, '#');
+
+            p2.Draw(); 
 
             /* 
+            /*
             int x1 = 1;
             int y1 = 3;
             char sym1 = '*';
@@ -37,10 +32,11 @@ namespace Snake
             Draw(x2, y2, sym2);
             */
 
-            Console.ReadLine(); // Ожидаем нажатия Enter для завершения
+            Console.ReadLine(); // Ожидаем нажатия Enter
         }
 
         /* 
+        /*
         static void Draw(int x, int y, char sym)
         {
             Console.SetCursorPosition(x, y);
