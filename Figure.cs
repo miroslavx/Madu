@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace Snake
-{
-    // Базовый класс для всех фигур на игровом поле
-    class Figure
+{class Figure
     {
         // Список точек, из которых состоит фигура
         protected List<Point> pList;
