@@ -1,20 +1,21 @@
 using System;
 using System.Collections.Generic;
+
 namespace Snake
 {
     // Класс для представления вертикальной линии, наследуется от Figure
     class VerticalLine : Figure
     {
-        // Конструктор создает вертикальную линию
+        // Конструктор для создания вертикальной линии
         public VerticalLine(int yUp, int yDown, int x, char sym)
         {
-            pList = new List<Point>();
-            for (int y = yUp; y <= yDown; y++)
+            pList = new List<Point>(); // Инициализация списка точек
+            for (int y = yUp; y <= yDown; y++) // Цикл для создания точек линии
             {
-                Point p = new Point(x, y, sym);
-                pList.Add(p);
+                Point p = new Point(x, y, sym); // Создание точки
+                pList.Add(p);                  // Добавление точки в список
             }
         }
-        // Метод Draw() не переопределен, используется реализация из базового класса Figure
+        // Метод Draw наследуется от базового класса Figure и не переопределяется здесь
     }
 }
