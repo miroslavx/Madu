@@ -1,13 +1,18 @@
 using System;
+
 namespace Snake
 {
     // Класс для представления точки на консоли
     class Point
     {
-        public int x; // Координата X
-        public int y; // Координата Y
-        public char sym; // Символ для отображения точки
-        // Пустой конструктор по умолчанию
+        // Координата X точки
+        public int x;
+        // Координата Y точки
+        public int y;
+        // Символ для отображения точки
+        public char sym;
+
+        // Конструктор по умолчанию
         public Point()
         {
         }
@@ -20,7 +25,7 @@ namespace Snake
             sym = _sym;
         }
 
-        // Конструктор копирования: создает новую точку на основе существующей
+        // Конструктор копирования для создания точки на основе другой точки
         public Point(Point p)
         {
             x = p.x;
@@ -28,7 +33,7 @@ namespace Snake
             sym = p.sym;
         }
 
-        // Смещает точку на 'offset' единиц в указанном 'direction'
+        // Метод для смещения точки на заданное расстояние в указанном направлении
         public void Move(int offset, Direction direction)
         {
             if (direction == Direction.RIGHT)
@@ -41,32 +46,35 @@ namespace Snake
             }
             else if (direction == Direction.UP)
             {
-                y = y - offset; // В консоли Y уменьшается при движении вверх
+                y = y - offset; // В консоли ось Y направлена вниз
             }
             else if (direction == Direction.DOWN)
             {
-                y = y + offset; // В консоли Y увеличивается при движении вниз
+                y = y + offset;
             }
         }
 
-        // Проверяет, совпадают ли координаты текущей точки с другой точкой 'p'
+        // Метод для проверки, совпадают ли координаты этой точки с другой точкой
         public bool IsHit(Point p)
         {
             return p.x == this.x && p.y == this.y;
         }
-        // Отображает точку на консоли
+
+        // Метод для отрисовки точки на консоли
         public void Draw()
         {
             Console.SetCursorPosition(x, y);
             Console.Write(sym);
         }
-        // Стирает точку с консоли (заменяет символ пробелом и перерисовывает)
+
+        // Метод для стирания точки с консоли (заменяет символ пробелом)
         public void Clear()
         {
             sym = ' ';
             Draw();
         }
-        // Возвращает строковое представление точки (для отладки)
+
+        // Переопределение метода ToString для удобного вывода информации о точке (например, для отладки)
         public override string ToString()
         {
             return x + ", " + y + ", " + sym;
