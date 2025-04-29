@@ -1,9 +1,13 @@
 using System;
 using System.Collections.Generic;
+
 namespace Snake
 {
+    // Класс для представления горизонтальной линии, наследуется от Figure
     class HorizontalLine : Figure
-    {public HorizontalLine(int xLeft, int xRight, int y, char sym)
+    {
+        // Конструктор создает горизонтальную линию
+        public HorizontalLine(int xLeft, int xRight, int y, char sym)
         {
             pList = new List<Point>();
             for (int x = xLeft; x <= xRight; x++)
@@ -12,13 +16,14 @@ namespace Snake
                 pList.Add(p);
             }
         }
+        // Переопределенный метод отрисовки для горизонтальной линии
+        // Рисует линию желтым цветом
         public override void Draw()
-        {Console.ForegroundColor = ConsoleColor.Yellow;
-            foreach (Point p in pList)
-            {
-                p.Draw();
-            }
-            Console.ForegroundColor = ConsoleColor.White;
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            // Вызов базовой реализации Draw() из класса Figure (или своя логика отрисовки)
+            base.Draw(); // Используем базовую отрисовку точек
+            Console.ForegroundColor = ConsoleColor.White; // Возвращаем цвет по умолчанию
         }
     }
 }
