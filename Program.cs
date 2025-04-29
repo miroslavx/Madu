@@ -13,20 +13,34 @@ namespace Snake
         // Главный метод, точка входа в программу
         static void Main(string[] args)
         {
-            // Установка размера буфера консоли
-            Console.SetBufferSize(80, 25);
+            // Безопасная установка размеров консоли
+            try
+            {
+                // Сначала устанавливаем размер окна консоли
+                Console.SetWindowSize(80, 25);
+                // Затем размер буфера консоли
+                Console.SetBufferSize(80, 25);
+            }
+            catch (Exception)
+            {
+                // Если не удалось установить размеры, продолжаем работу без изменения размеров
+            }
+
             // Скрытие курсора для более чистого отображения
             Console.CursorVisible = false;
+
             // Создание стен (рамки)
             Walls walls = new Walls(80, 25);
             // Отрисовка стен
             walls.Draw();
+
             // Определение начальной точки для хвоста змейки
             Point p = new Point(4, 5, '*');
             // Создание объекта змейки
             Snake snake = new Snake(p, 4, Direction.RIGHT);
             // Отрисовка начального состояния змейки
             snake.Draw();
+
             // Создание объекта для генерации еды
             FoodCreator foodCreator = new FoodCreator(80, 25, '$');
             // Создание первой порции еды
@@ -44,7 +58,7 @@ namespace Snake
                 }
 
                 // Проверка, съела ли змейка еду
-                if(snake.Eat( food ) )
+                if (snake.Eat(food))
                 {
                     // Если съела, создаем новую порцию еды
                     food = foodCreator.CreateFood();
@@ -56,8 +70,10 @@ namespace Snake
                     // Если не съела, просто двигаем змейку
                     snake.Move();
                 }
+
                 // Небольшая пауза для контроля скорости игры
                 Thread.Sleep(100);
+
                 // Проверка, была ли нажата клавиша
                 if (Console.KeyAvailable)
                 {
@@ -67,6 +83,7 @@ namespace Snake
                     snake.HandleKey(keyInfo.Key);
                 }
             }
+
             // Вывод сообщения "Игра Окончена" после завершения цикла
             WriteGameOver();
             // Ожидание нажатия Enter перед закрытием консоли
@@ -77,17 +94,19 @@ namespace Snake
         static void WriteGameOver()
         {
             int xOffset = 25;
-            int yOffset = 8; 
-            Console.ForegroundColor = ConsoleColor.Red; 
-            Console.SetCursorPosition(xOffset, yOffset++); 
-            WriteText("============================", xOffset, yOffset++); 
-            WriteText("        И Г Р А    О К О Н Ч Е Н А", xOffset + 1, yOffset++);
-            WriteText("============================", xOffset, yOffset++); 
+            int yOffset = 8;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.SetCursorPosition(xOffset, yOffset++);
+            WriteText("============================", xOffset, yOffset++);
+            WriteText(" GAME OVER YEEEEAS", xOffset + 1, yOffset++);
+            WriteText("============================", xOffset, yOffset++);
+            Console.ForegroundColor = ConsoleColor.White; // Возвращаем цвет по умолчанию
         }
-        static void WriteText( String text, int xOffset, int yOffset )
+
+        static void WriteText(String text, int xOffset, int yOffset)
         {
-            Console.SetCursorPosition(xOffset, yOffset); 
-            Console.WriteLine( text );                    
+            Console.SetCursorPosition(xOffset, yOffset);
+            Console.WriteLine(text);
         }
     }
 }
