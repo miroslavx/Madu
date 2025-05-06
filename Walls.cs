@@ -1,54 +1,75 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Snake
 {
-    // Класс, представляющий стены игрового поля
+    // Класс Walls: Управляет стенами игрового поля, включая постоянную рамку и динамические препятствия.
     class Walls
     {
-        // Список фигур (линий), из которых состоят стены
-        List<Figure> wallList;
+        List<Figure> permamentWallList;
+        List<Figure> dynamicObstacles;
 
-        // Конструктор класса, создающий рамку по периметру карты
         public Walls(int mapWidth, int mapHeight)
         {
-            wallList = new List<Figure>(); // Инициализация списка стен
+            permamentWallList = new List<Figure>();
+            dynamicObstacles = new List<Figure>();
 
-            // Создание горизонтальных и вертикальных линий для рамки
-            HorizontalLine upLine = new HorizontalLine(0, mapWidth - 2, 0, '+');
-            HorizontalLine downLine = new HorizontalLine(0, mapWidth - 2, mapHeight - 1, '+');
-            VerticalLine leftLine = new VerticalLine(0, mapHeight - 1, 0, '+');
-            VerticalLine rightLine = new VerticalLine(0, mapHeight - 1, mapWidth - 2, '+');
-
-            // Добавление созданных линий в список стен
-            wallList.Add(upLine);
-            wallList.Add(downLine);
-            wallList.Add(leftLine);
-            wallList.Add(rightLine);
+            permamentWallList.Add(new HorizontalLine(0, mapWidth - 1, 0, '+'));
+            permamentWallList.Add(new HorizontalLine(0, mapWidth - 1, mapHeight - 1, '+'));
+            permamentWallList.Add(new VerticalLine(1, mapHeight - 2, 0, '+'));
+            permamentWallList.Add(new VerticalLine(1, mapHeight - 2, mapWidth - 1, '+'));
         }
 
-        // Метод для проверки, столкнулась ли переданная фигура со стенами
+        public void AddObstacle(Figure obstacle)
+        {
+            dynamicObstacles.Add(obstacle);
+        }
+
+        public void ClearDynamicObstacles()
+        {
+            ConsoleColor originalBg = Console.BackgroundColor;
+            Console.BackgroundColor = Program.bgColor; // Устанавливаем фон для корректного стирания
+            foreach (var obs in dynamicObstacles)
+            {
+                obs.Clear();
+            }
+            dynamicObstacles.Clear();
+            Console.BackgroundColor = originalBg; // Восстанавливаем, если нужно
+        }
+        
+        // Возвращает список текущих динамических препятствий (для проверки при создании еды/ножниц)
+        public List<Figure> GetDynamicObstacles()
+        {
+            return dynamicObstacles;
+        }
+
+
         internal bool IsHit(Figure figure)
         {
-            foreach (var wall in wallList) // Перебираем каждую стену
+            foreach (var wall in permamentWallList)
             {
-                if (wall.IsHit(figure)) // Проверяем пересечение фигуры со стеной
-                {
-                    return true; // Если есть пересечение хотя бы с одной стеной, возвращаем true
-                }
+                if (wall.IsHit(figure)) return true;
             }
-            return false; // Если пересечений нет
+            foreach (var obs in dynamicObstacles)
+            {
+                if (obs.IsHit(figure)) return true;
+            }
+            return false;
         }
 
-        // Метод для отрисовки всех стен
-        public void Draw()
+        // Отрисовка стен. Цвет устанавливается перед вызовом в Program.cs
+        public void DrawPermanentWalls()
         {
-            foreach (var wall in wallList) // Перебираем и отрисовываем каждую стену
+            foreach (var wall in permamentWallList)
             {
                 wall.Draw();
+            }
+        }
+        public void DrawDynamicObstacles()
+        {
+            foreach (var obs in dynamicObstacles)
+            {
+                obs.Draw();
             }
         }
     }
