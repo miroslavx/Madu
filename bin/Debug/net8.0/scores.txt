@@ -1,0 +1,17 @@
+MMM:0
+1df:1
+MST:11
+ttt:12
+MIR:16
+123:19
+(Classic) 333:2
+(Classic) 555:15
+(TimeAttack) 352:12
+(Classic) кпп1:0
+(Classic) dfe:4
+[Klassika] SSS:1
+[Aeg] KKK:12
+[Klassika] ава:6
+[Klassika] ddd:2
+[Klassika] 1ww:2
+[Klassika] 5yt:20
