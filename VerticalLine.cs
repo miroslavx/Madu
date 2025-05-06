@@ -3,19 +3,19 @@ using System.Collections.Generic;
 
 namespace Snake
 {
-    // Класс для представления вертикальной линии, наследуется от Figure
+    // Класс VerticalLine: Представляет вертикальную линию, наследуется от Figure.
     class VerticalLine : Figure
     {
-        // Конструктор для создания вертикальной линии
         public VerticalLine(int yUp, int yDown, int x, char sym)
         {
-            pList = new List<Point>(); // Инициализация списка точек
-            for (int y = yUp; y <= yDown; y++) // Цикл для создания точек линии
+            pList = new List<Point>();
+            for (int y = yUp; y <= yDown; y++)
             {
-                Point p = new Point(x, y, sym); // Создание точки
-                pList.Add(p);                  // Добавление точки в список
+                Point p = new Point(x, y, sym);
+                pList.Add(p);
             }
         }
-        // Метод Draw наследуется от базового класса Figure и не переопределяется здесь
+        // Метод Draw() будет использоваться из базового класса Figure.
+        // Цвет будет устанавливаться в Program.cs перед вызовом Draw().
     }
 }
