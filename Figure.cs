@@ -2,44 +2,57 @@ using System;
 using System.Collections.Generic;
 
 namespace Snake
-{class Figure
+{
+    // Класс Figure: Базовый класс для всех игровых фигур, состоящих из списка точек.
+    // Предоставляет общие методы для отрисовки и проверки столкновений.
+    class Figure
     {
-        // Список точек, из которых состоит фигура
         protected List<Point> pList;
-
-        // Виртуальный метод для отрисовки фигуры (может быть переопределен в наследниках)
         public virtual void Draw()
         {
+            if (pList == null) return;
             foreach (Point p in pList)
             {
-                p.Draw();
+                p.Draw(); // Отрисовка каждой точки фигуры с текущим цветом консоли
+            }
+        }
+        public virtual void Clear()
+        {
+            if (pList == null) return;
+            foreach (Point p in pList)
+            {
+                p.Clear();
             }
         }
 
-        // Метод для проверки столкновения текущей фигуры с другой фигурой
+        public List<Point> GetPoints()
+        {
+            return pList;
+        }
         internal bool IsHit(Figure figure)
         {
-            foreach (var p in pList) // Перебираем все точки текущей фигуры
+            if (pList == null || figure == null || figure.GetPoints() == null) return false;
+            foreach (var p_current in pList)
             {
-                if (figure.IsHit(p)) // Проверяем, пересекается ли другая фигура с этой точкой
+                if (figure.ContainsPoint(p_current))
                 {
-                    return true; // Если хоть одна точка пересекается, значит фигуры столкнулись
+                    return true;
                 }
             }
-            return false; // Если ни одна точка не пересеклась, столкновения нет
+            return false;
         }
 
-        // Приватный вспомогательный метод для проверки столкновения фигуры с отдельной точкой
-        private bool IsHit(Point point)
+        internal bool ContainsPoint(Point point)
         {
-            foreach (var p in pList) // Перебираем все точки текущей фигуры
+            if (pList == null || point == null) return false;
+            foreach (var p_figure in pList)
             {
-                if (p.IsHit(point)) // Сравниваем каждую точку фигуры с переданной точкой
+                if (p_figure.IsHit(point))
                 {
-                    return true; // Если есть совпадение, значит точка попала на фигуру
+                    return true;
                 }
             }
-            return false; // Если совпадений нет
+            return false;
         }
     }
 }
