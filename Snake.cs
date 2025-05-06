@@ -4,86 +4,110 @@ using System.Linq;
 
 namespace Snake
 {
-    // Класс, представляющий змейку, наследуется от Figure
+    // Класс Snake: Представляет змейку, управляет ее движением, ростом и взаимодействием с другими объектами.
     class Snake : Figure
     {
-        // Текущее направление движения змейки
         Direction direction;
+        const int MIN_SNAKE_LENGTH_AFTER_SCISSORS = 3;
 
-        // Конструктор змейки
-        public Snake(Point tail, int length, Direction _direction)
+        public Snake(Point initialPos, int length, Direction initialDirection)
         {
-            direction = _direction; // Устанавливаем начальное направление
-            pList = new List<Point>(); // Инициализируем список точек змейки
-            for (int i = 0; i < length; i++) // Создаем змейку заданной длины
+            direction = initialDirection;
+            pList = new List<Point>();
+            for (int i = 0; i < length; i++)
             {
-                Point p = new Point(tail); // Каждая новая точка начинается с позиции хвоста
-                p.Move(i, direction);     // Смещаем точку для формирования тела змейки
-                pList.Add(p);             // Добавляем точку в список
+                Point p = new Point(initialPos);
+                p.Move(i, direction);
+                pList.Add(p);
             }
         }
+        
+        public List<Point> GetBody()
+        {
+            return pList;
+        }
 
-        // Метод для движения змейки на один шаг
         internal void Move()
         {
-            Point tail = pList.First(); // Получаем точку хвоста (первая в списке)
-            pList.Remove(tail);        // Удаляем хвост из списка
-            Point head = GetNextPoint(); // Вычисляем новую позицию головы
-            pList.Add(head);           // Добавляем новую голову в конец списка
+            if (pList == null || !pList.Any()) return;
+            
+            Point tail = new Point(pList.First());
+            Console.BackgroundColor = Program.bgColor;
+            tail.Clear();
 
-            tail.Clear();             // Стираем старый хвост с консоли
-            head.Draw();              // Рисуем новую голову на консоли
+            pList.RemoveAt(0);
+            Point head = GetNextPointPosition();
+            pList.Add(head);
+            
+            // Цвет для головы устанавливается в Program.cs перед вызовом Draw()
+            head.Draw();
         }
 
-        // Метод для проверки, съела ли змейка еду
         internal bool Eat(Point food)
         {
-            Point head = GetNextPoint(); // Получаем предполагаемую следующую позицию головы
-            if (head.IsHit(food)) // Проверяем, совпадает ли она с позицией еды
+            Point nextHead = GetNextPointPosition();
+            if (nextHead.IsHit(food))
             {
-                food.sym = head.sym; // Меняем символ еды на символ головы змейки
-                pList.Add(food);    // Добавляем точку (бывшую еду) к телу змейки
-                return true;       // Возвращаем true, так как еда съедена
+                food.sym = Program.SNAKE_SYMBOL_CONST; 
+                pList.Add(food);
+                // Цвет для "новой головы" (съеденной еды) устанавливается в Program.cs перед Draw
+                food.Draw();
+                return true;
             }
-            else
+            return false;
+        }
+
+        internal bool HitScissors(Point scissors)
+        {
+            if (scissors == null) return false;
+            Point nextHead = GetNextPointPosition();
+            return nextHead.IsHit(scissors);
+        }
+
+        internal void ShortenSnake()
+        {
+            int currentLength = pList.Count;
+            if (currentLength <= MIN_SNAKE_LENGTH_AFTER_SCISSORS) return;
+            int segmentsToRemove = currentLength / 2;
+            if (currentLength - segmentsToRemove < MIN_SNAKE_LENGTH_AFTER_SCISSORS)
             {
-                return false;      // Еда не съедена
+                segmentsToRemove = currentLength - MIN_SNAKE_LENGTH_AFTER_SCISSORS;
+            }
+            Console.BackgroundColor = Program.bgColor;
+            for (int i = 0; i < segmentsToRemove && pList.Count > MIN_SNAKE_LENGTH_AFTER_SCISSORS; i++)
+            {
+                Point segment = pList.First();
+                segment.Clear();
+                pList.RemoveAt(0);
             }
         }
 
-        // Проверка столкновения головы с хвостом
         internal bool IsHitTail()
         {
-            var head = pList.Last(); // Получаем текущую голову
-            for(int i = 0; i < pList.Count - 2; i++) // Проверяем все точки, кроме последних двух (головы и предголовы)
+            if (pList == null || pList.Count <= 1) return false;
+            var head = pList.Last();
+            for (int i = 0; i < pList.Count - 1; i++)
             {
-                if(head.IsHit( pList[ i ] ) ) // Если голова столкнулась с точкой хвоста
-                    return true;
+                if (head.IsHit(pList[i])) return true;
             }
-            return false; // Если столкновений нет
+            return false;
         }
-
-        //  метод для вычисления следующей позиции головы
-        private Point GetNextPoint()
+        
+        private Point GetNextPointPosition()
         {
-            Point head = pList.Last();      // Текущая голова - последняя точка в списке
-            Point nextPoint = new Point(head); // Создаем копию головы
-            nextPoint.Move(1, direction);   // Сдвигаем копию на один шаг в текущем направлении
-            return nextPoint;              // Возвращаем новую позицию
+            Point currentHead = pList.Last();
+            Point nextPos = new Point(currentHead);
+            nextPos.Move(1, direction);
+            return nextPos;
         }
 
-        // Метод для обработки нажатий клавиш управления
         public void HandleKey(ConsoleKey key)
         {
-            // Меняем направление движения змейки в зависимости от нажатой стрелки
-            if (key == ConsoleKey.LeftArrow)
-                direction = Direction.LEFT;
-            else if (key == ConsoleKey.RightArrow)
-                direction = Direction.RIGHT;
-            else if (key == ConsoleKey.DownArrow)
-                direction = Direction.DOWN;
-            else if (key == ConsoleKey.UpArrow)
-                direction = Direction.UP;
+            if (key == ConsoleKey.LeftArrow && direction != Direction.RIGHT) direction = Direction.LEFT;
+            else if (key == ConsoleKey.RightArrow && direction != Direction.LEFT) direction = Direction.RIGHT;
+            else if (key == ConsoleKey.UpArrow && direction != Direction.DOWN) direction = Direction.UP;
+            else if (key == ConsoleKey.DownArrow && direction != Direction.UP) direction = Direction.DOWN;
         }
+        // Метод Draw() из Figure используется. Цвет устанавливается в Program.cs.
     }
 }
