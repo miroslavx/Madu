@@ -1,41 +1,59 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Snake
 {
-    // Класс, отвечающий за создание еды на игровом поле
+    // Класс FoodCreator: Отвечает за создание объектов еды на игровом поле.
     class FoodCreator
     {
-        // Ширина игрового поля
-        int mapWidht;
-        // Высота игрового поля
+        int mapWidth;
         int mapHeight;
-        // Символ, которым отображается еда
         char sym;
-
-        // Генератор случайных чисел для определения координат еды
         Random random = new Random();
 
-        // Конструктор класса, принимающий размеры карты и символ еды
-        public FoodCreator(int mapWidth, int mapHeight, char sym)
+        public FoodCreator(int width, int height, char foodSymbol)
         {
-            this.mapWidht = mapWidth;   // Сохраняем ширину
-            this.mapHeight = mapHeight; // Сохраняем высоту
-            this.sym = sym;             // Сохраняем символ
+            mapWidth = width;
+            mapHeight = height;
+            sym = foodSymbol;
         }
 
-        // Метод для создания точки еды в случайном месте карты (внутри границ)
-        public Point CreateFood()
+        public Point CreateFood(List<Point> snakeBody, Point currentScissors, List<Figure> obstacles)
         {
-            // Генерируем случайную X координату (с отступом от краев)
-            int x = random.Next(2, mapWidht - 2);
-            // Генерируем случайную Y координату (с отступом от краев)
-            int y = random.Next(2, mapHeight - 2);
-            // Возвращаем новую точку с вычисленными координатами и заданным символом
-            return new Point(x, y, sym);
+            int x, y;
+            bool collision;
+            Point newFoodLocation;
+            do
+            {
+                x = random.Next(1, mapWidth - 1);
+                y = random.Next(1, mapHeight - 1);
+                newFoodLocation = new Point(x, y, sym);
+                collision = false;
+
+                if (snakeBody != null)
+                {
+                    foreach (Point p in snakeBody)
+                    {
+                        if (p.IsHit(newFoodLocation)) { collision = true; break; }
+                    }
+                }
+                if (!collision && currentScissors != null && currentScissors.IsHit(newFoodLocation))
+                {
+                    collision = true;
+                }
+                if (!collision && obstacles != null)
+                {
+                    foreach(Figure obs in obstacles)
+                    {
+                        if(obs.ContainsPoint(newFoodLocation))
+                        {
+                            collision = true;
+                            break;
+                        }
+                    }
+                }
+            } while (collision);
+            return newFoodLocation;
         }
     }
 }
