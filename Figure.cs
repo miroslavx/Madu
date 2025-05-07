@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Snake
 {
-    // Класс Figure: Базовый класс для всех игровых фигур, состоящих из списка точек.
-    // Предоставляет общие методы для отрисовки и проверки столкновений.
+    // Класс Figure: Базовый класс для всех игровых фигур, состоящих из списка точек предоставляет общие методы для отрисовки и проверки столкновений.
     class Figure
     {
         protected List<Point> pList;
+
         public virtual void Draw()
         {
             if (pList == null) return;
@@ -16,6 +16,7 @@ namespace Snake
                 p.Draw(); // Отрисовка каждой точки фигуры с текущим цветом консоли
             }
         }
+
         public virtual void Clear()
         {
             if (pList == null) return;
@@ -29,6 +30,7 @@ namespace Snake
         {
             return pList;
         }
+
         internal bool IsHit(Figure figure)
         {
             if (pList == null || figure == null || figure.GetPoints() == null) return false;

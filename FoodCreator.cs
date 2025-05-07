@@ -43,9 +43,9 @@ namespace Snake
                 }
                 if (!collision && obstacles != null)
                 {
-                    foreach(Figure obs in obstacles)
+                    foreach (Figure obs in obstacles)
                     {
-                        if(obs.ContainsPoint(newFoodLocation))
+                        if (obs.ContainsPoint(newFoodLocation))
                         {
                             collision = true;
                             break;

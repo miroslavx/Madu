@@ -8,7 +8,6 @@ namespace Snake
         public int x;
         public int y;
         public char sym;
-
         public Point() { }
         public Point(int _x, int _y, char _sym)
         {
@@ -43,7 +42,7 @@ namespace Snake
             if (x >= 0 && x < Console.BufferWidth && y >= 0 && y < Console.BufferHeight)
             {
                 Console.SetCursorPosition(x, y);
-                Console.Write(sym);
+                Console.Write(sym); 
             }
         }
 
