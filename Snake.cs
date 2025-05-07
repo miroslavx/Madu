@@ -21,7 +21,7 @@ namespace Snake
                 pList.Add(p);
             }
         }
-        
+
         public List<Point> GetBody()
         {
             return pList;
@@ -30,17 +30,25 @@ namespace Snake
         internal void Move()
         {
             if (pList == null || !pList.Any()) return;
-            
+
             Point tail = new Point(pList.First());
-            Console.BackgroundColor = Program.bgColor;
+            ConsoleColor originalBg = Console.BackgroundColor;
+            Console.BackgroundColor = Program.bgColor; // Установка фона для корректной очистки
             tail.Clear();
+            Console.BackgroundColor = originalBg; // Восстановление фона (если важно)
 
             pList.RemoveAt(0);
             Point head = GetNextPointPosition();
             pList.Add(head);
-            
-            // Цвет для головы устанавливается в Program.cs перед вызовом Draw()
-            head.Draw();
+
+            // Цвет для головы устанавливается в Game.cs/TimeGame.cs перед вызовом Draw() змейки
+            // или голова рисуется отдельно с нужным цветом.
+            // В данном случае Draw() змейки отрисует все сегменты одним цветом,
+            // поэтому если голова должна быть другого цвета, ее надо рисовать отдельно,
+            // либо Snake.Draw() должен это учитывать.
+            // Текущая логика Game.cs/TimeGame.cs устанавливает цвет змеи и вызывает snake.Draw()
+            // или snake.Move(), которая затем вызывает head.Draw() - здесь цвет уже должен быть установлен.
+            head.Draw(); // Использует текущий Console.ForegroundColor
         }
 
         internal bool Eat(Point food)
@@ -48,10 +56,10 @@ namespace Snake
             Point nextHead = GetNextPointPosition();
             if (nextHead.IsHit(food))
             {
-                food.sym = Program.SNAKE_SYMBOL_CONST; 
+                food.sym = Program.SNAKE_SYMBOL_CONST;
                 pList.Add(food);
-                // Цвет для "новой головы" (съеденной еды) устанавливается в Program.cs перед Draw
-                food.Draw();
+                // Цвет для "новой головы" (съеденной еды) устанавливается в Game.cs/TimeGame.cs перед Draw
+                food.Draw(); // Использует текущий Console.ForegroundColor
                 return true;
             }
             return false;
@@ -73,13 +81,16 @@ namespace Snake
             {
                 segmentsToRemove = currentLength - MIN_SNAKE_LENGTH_AFTER_SCISSORS;
             }
-            Console.BackgroundColor = Program.bgColor;
+
+            ConsoleColor originalBg = Console.BackgroundColor;
+            Console.BackgroundColor = Program.bgColor; // Установка фона для корректной очистки
             for (int i = 0; i < segmentsToRemove && pList.Count > MIN_SNAKE_LENGTH_AFTER_SCISSORS; i++)
             {
                 Point segment = pList.First();
                 segment.Clear();
                 pList.RemoveAt(0);
             }
+            Console.BackgroundColor = originalBg; // Восстановление фона
         }
 
         internal bool IsHitTail()
@@ -92,7 +103,7 @@ namespace Snake
             }
             return false;
         }
-        
+
         private Point GetNextPointPosition()
         {
             Point currentHead = pList.Last();
@@ -108,6 +119,6 @@ namespace Snake
             else if (key == ConsoleKey.UpArrow && direction != Direction.DOWN) direction = Direction.UP;
             else if (key == ConsoleKey.DownArrow && direction != Direction.UP) direction = Direction.DOWN;
         }
-        // Метод Draw() из Figure используется. Цвет устанавливается в Program.cs.
+        // Метод Draw() из Figure используется. Цвет устанавливается в Game.cs/TimeGame.cs.
     }
 }

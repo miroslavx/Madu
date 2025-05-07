@@ -14,6 +14,7 @@ namespace Snake
             permamentWallList = new List<Figure>();
             dynamicObstacles = new List<Figure>();
 
+            // Символ для рамки '+' используется по умолчанию, цвет задается извне
             permamentWallList.Add(new HorizontalLine(0, mapWidth - 1, 0, '+'));
             permamentWallList.Add(new HorizontalLine(0, mapWidth - 1, mapHeight - 1, '+'));
             permamentWallList.Add(new VerticalLine(1, mapHeight - 2, 0, '+'));
@@ -34,15 +35,13 @@ namespace Snake
                 obs.Clear();
             }
             dynamicObstacles.Clear();
-            Console.BackgroundColor = originalBg; // Восстанавливаем, если нужно
+            Console.BackgroundColor = originalBg; // Восстанавливаем, если нужно было менять локально
         }
-        
-        // Возвращает список текущих динамических препятствий (для проверки при создании еды/ножниц)
+
         public List<Figure> GetDynamicObstacles()
         {
             return dynamicObstacles;
         }
-
 
         internal bool IsHit(Figure figure)
         {
@@ -56,8 +55,6 @@ namespace Snake
             }
             return false;
         }
-
-        // Отрисовка стен. Цвет устанавливается перед вызовом в Program.cs
         public void DrawPermanentWalls()
         {
             foreach (var wall in permamentWallList)

@@ -22,7 +22,6 @@ namespace Snake
             {
                 if (!Directory.Exists(baseSoundPath))
                 {
-                    // Отладочное сообщение уже есть в Program.cs если папка не найдена
                     return;
                 }
 
@@ -51,8 +50,8 @@ namespace Snake
         {
             try
             {
-                StopBackground();
-                playerGameOver?.PlaySync();
+                StopBackground(); // Сначала остановить фон
+                playerGameOver?.PlaySync(); // PlaySync чтобы звук успел проиграться перед закрытием или переходом
             }
             catch (Exception ex) { Console.Error.WriteLine($"Viga mängu lõpu heli mängimisel: {ex.Message}"); }
         }

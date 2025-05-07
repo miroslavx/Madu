@@ -24,3 +24,13 @@ MIR:16
 [Aeg] NNS:19
 [Klassika] MIRON:13
 [Aeg] NSÕ:17
+[Aeg] TEST2:15
+[Aeg] TEST1:15
+[Klassika] xcd:2
+[Klassika] TEST6:16
+[Klassika] 63223421:1
+[Aeg] 345:10
+[Aeg] 000:0
+[Aeg] AEGAMASTER668:17
+[Klassika] asdasdasdasdasd:4
+[Aeg] eee:17
