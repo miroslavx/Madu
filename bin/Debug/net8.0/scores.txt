@@ -15,3 +15,12 @@ MIR:16
 [Klassika] ddd:2
 [Klassika] 1ww:2
 [Klassika] 5yt:20
+[Klassika] \md:7
+[Aeg] 2ds:1
+[Aeg] \|NB:11
+[Klassika] MDS:0
+[Klassika] MDS:4
+[Klassika] fff:9
+[Aeg] NNS:19
+[Klassika] MIRON:13
+[Aeg] NSÕ:17
