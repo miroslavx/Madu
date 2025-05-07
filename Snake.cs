@@ -40,15 +40,7 @@ namespace Snake
             pList.RemoveAt(0);
             Point head = GetNextPointPosition();
             pList.Add(head);
-
-            // Цвет для головы устанавливается в Game.cs/TimeGame.cs перед вызовом Draw() змейки
-            // или голова рисуется отдельно с нужным цветом.
-            // В данном случае Draw() змейки отрисует все сегменты одним цветом,
-            // поэтому если голова должна быть другого цвета, ее надо рисовать отдельно,
-            // либо Snake.Draw() должен это учитывать.
-            // Текущая логика Game.cs/TimeGame.cs устанавливает цвет змеи и вызывает snake.Draw()
-            // или snake.Move(), которая затем вызывает head.Draw() - здесь цвет уже должен быть установлен.
-            head.Draw(); // Использует текущий Console.ForegroundColor
+            head.Draw();
         }
 
         internal bool Eat(Point food)
