@@ -14,7 +14,7 @@ namespace Snake
             permamentWallList = new List<Figure>();
             dynamicObstacles = new List<Figure>();
 
-            // Символ для рамки '+' используется по умолчанию, цвет задается извне
+            // Инициализация постоянных стен (рамки игрового поля)
             permamentWallList.Add(new HorizontalLine(0, mapWidth - 1, 0, '+'));
             permamentWallList.Add(new HorizontalLine(0, mapWidth - 1, mapHeight - 1, '+'));
             permamentWallList.Add(new VerticalLine(1, mapHeight - 2, 0, '+'));
@@ -26,6 +26,7 @@ namespace Snake
             dynamicObstacles.Add(obstacle);
         }
 
+        // Очищает динамические препятствия с экрана и из списка
         public void ClearDynamicObstacles()
         {
             ConsoleColor originalBg = Console.BackgroundColor;
@@ -43,6 +44,7 @@ namespace Snake
             return dynamicObstacles;
         }
 
+        // Проверяет, столкнулась ли фигура (например, змейка) со стеной
         internal bool IsHit(Figure figure)
         {
             foreach (var wall in permamentWallList)
@@ -55,6 +57,7 @@ namespace Snake
             }
             return false;
         }
+        // Отрисовывает постоянные стены
         public void DrawPermanentWalls()
         {
             foreach (var wall in permamentWallList)
@@ -62,6 +65,7 @@ namespace Snake
                 wall.Draw();
             }
         }
+        // Отрисовывает динамические препятствия
         public void DrawDynamicObstacles()
         {
             foreach (var obs in dynamicObstacles)
