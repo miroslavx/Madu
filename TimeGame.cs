@@ -2,19 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Diagnostics;
-using System.Linq;
+
 
 namespace Snake
 {
-    // Класс TimeGame Змейка на время
+    // Класс TimeGame: Змейка на время
     static class TimeGame
     {
         const int INITIAL_SNAKE_LENGTH = 5;
-        const int INITIAL_GAME_DELAY_MS = 100; 
-        const int MIN_GAME_DELAY_MS = 50;      
-        const int DELAY_DECREASE_STEP_ON_EAT = 2; 
-        const int INITIAL_FOOD_COUNT = 40;     
-        const int TIME_ATTACK_DURATION_SECONDS = 30; 
+        const int INITIAL_GAME_DELAY_MS = 100;
+        const int MIN_GAME_DELAY_MS = 50;
+        const int DELAY_DECREASE_STEP_ON_EAT = 2;
+        const int INITIAL_FOOD_COUNT = 40;
+        const int TIME_ATTACK_DURATION_SECONDS = 30;
 
         public static void PlayTimeAttackGame()
         {
@@ -22,6 +22,7 @@ namespace Snake
             Console.Clear();
             Console.CursorVisible = false;
 
+            // Инициализация игрового поля, змейки и еды
             Walls walls = new Walls(Program.MAP_WIDTH, Program.MAP_HEIGHT);
             Program.SetCurrentColors(Program.fgColorPermanentWall, Program.bgColor);
             walls.DrawPermanentWalls(); // В этом режиме только рамка
@@ -50,8 +51,10 @@ namespace Snake
 
             bool allFoodEaten = false;
 
+            // Основной игровой цикл
             while (true)
             {
+                // Проверка оставшегося времени
                 long timeLeftMs = (TIME_ATTACK_DURATION_SECONDS * 1000) - gameTimer.ElapsedMilliseconds;
                 if (timeLeftMs <= 0)
                 {
@@ -61,12 +64,14 @@ namespace Snake
                     break;
                 }
 
+                // Отображение счета, скорости и оставшегося времени
                 Console.SetCursorPosition(0, Program.MAP_HEIGHT + 1);
                 Program.SetCurrentColors(Program.fgColorText, Program.bgColor);
                 string speedDisplay = Program.GetSpeedDisplay(gameDelayMs, MIN_GAME_DELAY_MS, 150); // 150 - условная макс. задержка для TimeAttack
-                Console.Write($"Skoor: {score}   Kiirus: {speedDisplay.PadRight(10)}   Aeg: {timeLeftMs / 1000:D2}s  "); // :D2 для двузначного отображения секунд
+                Console.Write($"Skoor: {score}   Kiirus: {speedDisplay.PadRight(10)}   Aeg: {timeLeftMs / 1000:D2}s  ");
                 Console.Write("            "); // Очистка остатка строки
 
+                // Обработка ввода пользователя (выход, управление змейкой)
                 if (Console.KeyAvailable)
                 {
                     ConsoleKeyInfo keyInfo = Console.ReadKey(true);
@@ -74,6 +79,7 @@ namespace Snake
                     snake.HandleKey(keyInfo.Key);
                 }
 
+                // Проверка столкновений змейки со стенами или хвостом
                 if (walls.IsHit(snake) || snake.IsHitTail())
                 {
                     gameTimer.Stop();
@@ -83,6 +89,7 @@ namespace Snake
 
                 bool ateFoodThisTurn = false;
 
+                // Логика поедания еды и обновления счета/скорости
                 for (int i = foodItems.Count - 1; i >= 0; i--)
                 {
                     Program.SetCurrentColors(Program.fgColorSnake, Program.bgColor);
@@ -98,7 +105,7 @@ namespace Snake
                             gameDelayMs = Math.Max(MIN_GAME_DELAY_MS, gameDelayMs - DELAY_DECREASE_STEP_ON_EAT);
                         }
 
-                        if (!foodItems.Any()) // Вся еда съедена
+                        if (foodItems.Count == 0)
                         {
                             allFoodEaten = true;
                             gameTimer.Stop(); // Остановить таймер
@@ -110,6 +117,7 @@ namespace Snake
                 if (allFoodEaten) break; // Выход из основного цикла, если вся еда съедена
 
 
+                // Движение змейки, если еда не была съедена
                 if (!ateFoodThisTurn)
                 {
                     Program.SetCurrentColors(Program.fgColorSnake, Program.bgColor);
@@ -119,6 +127,7 @@ namespace Snake
                 Thread.Sleep(gameDelayMs);
             }
 
+            // Логика завершения игры: отображение результатов, сохранение счета
             Console.CursorVisible = false;
             Program.SetCurrentColors(ConsoleColor.Red, Program.bgColor);
             Program.WriteTextAt("MÄNG LÄBI!", (Console.BufferWidth / 2) - 5, Program.MAP_HEIGHT / 2 - 1);
@@ -132,7 +141,7 @@ namespace Snake
                 Program.WriteTextAt($"Sinu skoor: {score}", (Console.BufferWidth / 2) - 7, Program.MAP_HEIGHT / 2 + 0);
             }
 
-            Menu.SaveScore(score, "Aeg");
+            Menu.SaveScore(score, "Aeg"); // Сохранение счета с тегом режима
 
             Program.SetCurrentColors(Program.fgColorText, Program.bgColor);
             Program.WriteTextAt("Vajuta Enter menüüsse naasmiseks...", (Console.BufferWidth / 2) - 17, Program.MAP_HEIGHT / 2 + 6);
