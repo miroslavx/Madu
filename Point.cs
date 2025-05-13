@@ -16,13 +16,14 @@ namespace Snake
             sym = _sym;
         }
 
-        public Point(Point p)
+        public Point(Point p) // Конструктор копирования
         {
             x = p.x;
             y = p.y;
             sym = p.sym;
         }
 
+        // Сдвигает точку на указанное смещение в заданном направлении.
         public void Move(int offset, Direction direction)
         {
             if (direction == Direction.RIGHT) x += offset;
@@ -31,25 +32,29 @@ namespace Snake
             else if (direction == Direction.DOWN) y += offset;
         }
 
+        // Проверяет, совпадают ли координаты этой точки с другой точкой.
         public bool IsHit(Point p)
         {
             if (p == null) return false;
             return p.x == this.x && p.y == this.y;
         }
 
+        // Отрисовывает символ точки в консоли.
         public void Draw()
         {
+            // Проверка, чтобы не пытаться рисовать за пределами буфера консоли
             if (x >= 0 && x < Console.BufferWidth && y >= 0 && y < Console.BufferHeight)
             {
                 Console.SetCursorPosition(x, y);
-                Console.Write(sym); 
+                Console.Write(sym);
             }
         }
 
+        // Очищает точку с экрана (рисует пробел).
         public void Clear()
         {
-            sym = ' ';
-            Draw();
+            sym = ' '; // Заменяем символ на пробел
+            Draw();    // Отрисовываем пробел на месте точки
         }
 
         public override string ToString()
