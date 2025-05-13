@@ -1,10 +1,10 @@
 namespace Snake
 {
-    // Класс для хранения имени игрока и его счета.
+    // Класс ScoreEntry: Для хранения имени игрока и его счета
     class ScoreEntry
     {
-        public string Name; 
-        public int Score;
+        public string Name;  // Имя игрока ( включает кст тег режима игры)
+        public int Score;    // Количество очков
 
         public ScoreEntry(string name, int score)
         {
@@ -12,4 +12,4 @@ namespace Snake
             Score = score;
         }
     }
-}
+} 
