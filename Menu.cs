@@ -7,21 +7,23 @@ namespace Snake
     // Класс Menu: Управляет отображением главного меню, таблицы рекордов и настройками цветовой схемы.
     static class Menu
     {
+        // Отображение главного меню и обработка выбора пользователя.
         public static void ShowMainMenu(out bool exitSelected)
         {
             exitSelected = false;
-            Program.gameSounds?.PlayBackground();
+            Program.gameSounds?.PlayBackground(); // Запуск фоновой музыки для меню
 
             Console.BackgroundColor = Program.bgColor;
             Console.Clear();
             Program.SetCurrentColors(Program.fgColorText, Program.bgColor);
 
+            // Отображение заголовка меню
             int centerAlignX = (Console.BufferWidth / 2);
-
             Program.WriteTextAt("╔════════════════════════╗", centerAlignX - 14, 3);
-            Program.WriteTextAt("║        S N A K E       ║", centerAlignX - 14, 4);
+            Program.WriteTextAt("║        M A D U         ║", centerAlignX - 14, 4);
             Program.WriteTextAt("╚════════════════════════╝", centerAlignX - 14, 5);
 
+            // Пункты меню
             string[] menuItems = {
                 "1. Alusta mängu (Klassikaline)",
                 "2. Mäng ajale (Kiire)",
@@ -35,18 +37,19 @@ namespace Snake
             {
                 Program.WriteTextAt($"   {item.PadRight(menuItemWidth - 6)}", centerAlignX - menuItemWidth / 2, menuY++);
             }
-            Program.WriteTextAt("".PadRight(menuItemWidth, '-'), centerAlignX - menuItemWidth / 2, menuY++);
-            Program.WriteTextAt("Vali number: ", Math.Max(0, centerAlignX - 12), menuY); // Используем menuY напрямую
+            Program.WriteTextAt("".PadRight(menuItemWidth, '-'), centerAlignX - menuItemWidth / 2, menuY++); // Разделитель
+            Program.WriteTextAt("Vali number: ", Math.Max(0, centerAlignX - 12), menuY);
 
             Console.CursorVisible = true;
             string choice = Console.ReadLine();
             Console.CursorVisible = false;
 
+            // Обработка выбора пользователя
             switch (choice)
             {
                 case "1":
                     Program.gameSounds?.StopBackground();
-                    Game.PlayClassicGame();
+                    Game.PlayClassicGame(); // Запуск классического режима игры
                     break;
                 case "2":
                     Program.gameSounds?.StopBackground();
@@ -63,18 +66,19 @@ namespace Snake
                     Program.gameSounds?.StopBackground();
                     break;
                 default:
-                    Program.WriteTextAt("Vale valik. Vajuta Enter...", centerAlignX - 10, menuY + 2); 
+                    Program.WriteTextAt("Vale valik. Vajuta Enter...", centerAlignX - 10, menuY + 2);
                     Console.ReadLine();
                     break;
             }
         }
 
+        // Сохраняет счет игрока.
         public static void SaveScore(int score, string gameModeTag)
         {
             Console.CursorVisible = true;
             Program.SetCurrentColors(Program.fgColorText, Program.bgColor);
 
-            // Определяем позицию для "Sisesta oma nimi"
+            // Получение имени игрока для сохранения рекорда.
             int promptY = Program.MAP_HEIGHT / 2 + 3;
             int promptX = (Console.BufferWidth / 2) - 20;
             Program.WriteTextAt("Sisesta oma nimi (min 3 tähte): ", promptX, promptY);
@@ -87,17 +91,17 @@ namespace Snake
                 if (!string.IsNullOrEmpty(playerName) && playerName.Length >= 3) break;
 
                 // Сообщение об ошибке и повторный ввод
-                Program.SetCurrentColors(ConsoleColor.Red, Program.bgColor); // Выделим ошибку
-                Program.WriteTextAt("Nimi peab olema vähemalt 3 tähte! Proovi uuesti: ".PadRight(Console.BufferWidth - (promptX + 1)), promptX, promptY + 1); // Очистка строки и сообщение
+                Program.SetCurrentColors(ConsoleColor.Red, Program.bgColor);
+                Program.WriteTextAt("Nimi peab olema vähemalt 3 tähte! Proovi uuesti: ".PadRight(Console.BufferWidth - (promptX + 1)), promptX, promptY + 1);
                 Program.SetCurrentColors(Program.fgColorText, Program.bgColor);
-                Console.SetCursorPosition(promptX + "Nimi peab olema vähemalt 3 tähte! Proovi uuesti: ".Length, promptY + 1); // Курсор для нового ввода
+                Console.SetCursorPosition(promptX + "Nimi peab olema vähemalt 3 tähte! Proovi uuesti: ".Length, promptY + 1);
             }
             Console.CursorVisible = false;
 
             // Очистка строки с ошибкой, если она была
             Program.WriteTextAt(" ".PadRight(Console.BufferWidth - (promptX + 1)), promptX, promptY + 1);
 
-
+            // Сохранение рекорда в файл.
             try
             {
                 using (StreamWriter sw = new StreamWriter(Program.SCORES_FILENAME, true))
@@ -112,12 +116,14 @@ namespace Snake
             }
         }
 
+        // Отображает таблицу рекордов.
         static void ShowHighScores()
         {
             Console.BackgroundColor = Program.bgColor;
             Console.Clear();
             Program.SetCurrentColors(Program.fgColorText, Program.bgColor);
 
+            // Заголовок таблицы рекордов
             int centerAlignX = (Console.BufferWidth / 2);
             Program.WriteTextAt("╔════════════════════════╗", centerAlignX - 14, 1);
             Program.WriteTextAt("║    R E K O R D I D     ║", centerAlignX - 14, 2);
@@ -131,18 +137,21 @@ namespace Snake
             }
             else
             {
+                // Загрузка и парсинг рекордов из файла
                 List<ScoreEntry> scores = new List<ScoreEntry>();
                 try
                 {
                     string[] lines = File.ReadAllLines(Program.SCORES_FILENAME);
                     foreach (string line in lines)
                     {
-                        string[] parts = line.Split(new char[] { ':' }, 2);
+                        string[] parts = line.Split(new char[] { ':' }, 2); // Разделяем по первому ':'
                         if (parts.Length == 2 && int.TryParse(parts[1], out int scoreValue))
                         {
-                            scores.Add(new ScoreEntry(parts[0], scoreValue));
+                            scores.Add(new ScoreEntry(parts[0], scoreValue)); // parts[0] содержит имя и тэг режима
                         }
                     }
+
+                    // Сортировка рекордов по убыванию (простая пузырьковая сортировка)
                     for (int i = 0; i < scores.Count - 1; i++)
                     {
                         for (int j = 0; j < scores.Count - i - 1; j++)
@@ -153,13 +162,15 @@ namespace Snake
                             }
                         }
                     }
+
+                    // Отображение топ-10 рекордов
                     int count = 0;
                     foreach (ScoreEntry entry in scores)
                     {
                         string scoreLine = $"{count + 1}. {entry.Name} - {entry.Score}";
                         Program.WriteTextAt(scoreLine, centerAlignX - (scoreLine.Length / 2), scoreListY++);
                         count++;
-                        if (count >= 10) break;
+                        if (count >= 10) break; // Показываем только топ 10
                     }
                     if (count == 0) Program.WriteTextAt("Rekordeid veel pole (fail tühi või vale formaat).", centerAlignX - 25, scoreListY);
                 }
@@ -171,17 +182,20 @@ namespace Snake
             Console.CursorVisible = false;
         }
 
+        // Позволяет пользователю выбрать цветовую схему игры.
         static void SelectColorScheme()
         {
             Console.BackgroundColor = Program.bgColor;
             Console.Clear();
             Program.SetCurrentColors(Program.fgColorText, Program.bgColor);
 
+            // Заголовок меню выбора цвета
             int centerAlignX = (Console.BufferWidth / 2);
             Program.WriteTextAt("╔════════════════════════╗", centerAlignX - 14, 3);
             Program.WriteTextAt("║   V Ä R V I V A L I K  ║", centerAlignX - 14, 4);
             Program.WriteTextAt("╚════════════════════════╝", centerAlignX - 14, 5);
 
+            // Доступные цветовые схемы
             string[] schemes = {
                 "1. Standard",
                 "2. Monokroomne Roheline",
@@ -195,37 +209,36 @@ namespace Snake
             {
                 Program.WriteTextAt($"   {s.PadRight(schemeItemWidth - 6)}", centerAlignX - schemeItemWidth / 2, schemeY++);
             }
-            Program.WriteTextAt("".PadRight(schemeItemWidth, '-'), centerAlignX - schemeItemWidth / 2, schemeY++); // Разделитель
+            Program.WriteTextAt("".PadRight(schemeItemWidth, '-'), centerAlignX - schemeItemWidth / 2, schemeY++);
             Program.WriteTextAt("Sinu valik: ", centerAlignX - schemeItemWidth / 2, schemeY);
 
             Console.CursorVisible = true;
             string choice = Console.ReadLine();
             Console.CursorVisible = false;
 
-            // Позиция для сообщения об ошибке или результате
-            int messageY = schemeY + 2; // Через одну строку от ввода
-
+            // Применение выбранной схемы
+            int messageY = schemeY + 2;
             switch (choice)
             {
-                case "1":
+                case "1": // Стандартная схема
                     Program.fgColorPermanentWall = ConsoleColor.Yellow; Program.fgColorDynamicWall = ConsoleColor.DarkGray;
                     Program.fgColorSnake = ConsoleColor.Green; Program.fgColorFood = ConsoleColor.Red;
                     Program.fgColorScissors = ConsoleColor.Cyan; Program.fgColorText = ConsoleColor.White;
                     Program.bgColor = ConsoleColor.Black;
                     break;
-                case "2":
+                case "2": // Монохромная зеленая
                     Program.fgColorPermanentWall = ConsoleColor.Green; Program.fgColorDynamicWall = ConsoleColor.DarkGreen;
                     Program.fgColorSnake = ConsoleColor.Green; Program.fgColorFood = ConsoleColor.Green;
                     Program.fgColorScissors = ConsoleColor.Green; Program.fgColorText = ConsoleColor.Green;
                     Program.bgColor = ConsoleColor.Black;
                     break;
-                case "3":
+                case "3": // Монохромная красная
                     Program.fgColorPermanentWall = ConsoleColor.Red; Program.fgColorDynamicWall = ConsoleColor.DarkRed;
                     Program.fgColorSnake = ConsoleColor.Red; Program.fgColorFood = ConsoleColor.Red;
                     Program.fgColorScissors = ConsoleColor.Red; Program.fgColorText = ConsoleColor.Red;
                     Program.bgColor = ConsoleColor.Black;
                     break;
-                case "4":
+                case "4": // Монохромная желтая
                     Program.fgColorPermanentWall = ConsoleColor.Yellow; Program.fgColorDynamicWall = ConsoleColor.DarkYellow;
                     Program.fgColorSnake = ConsoleColor.Yellow; Program.fgColorFood = ConsoleColor.Yellow;
                     Program.fgColorScissors = ConsoleColor.Yellow; Program.fgColorText = ConsoleColor.Yellow;
@@ -233,12 +246,11 @@ namespace Snake
                     break;
                 default:
                     Program.WriteTextAt("Vale valik. Värve ei muudetud.", centerAlignX - 15, messageY);
-                    messageY++; // Сдвигаем Y для следующего ReadLine, если понадобится
+                    messageY++;
                     break;
             }
-            Console.BackgroundColor = Program.bgColor;
-            // Console.Clear(); // Убрал полный Clear, т.к. сообщение может быть ниже
-            Program.SetCurrentColors(Program.fgColorText, Program.bgColor);
+            Console.BackgroundColor = Program.bgColor; // Применяем новый фон, если он изменился
+            Program.SetCurrentColors(Program.fgColorText, Program.bgColor); // Применяем новые цвета текста
             Program.WriteTextAt("Värviskeem rakendatud. Vajuta Enter...", centerAlignX - 18, messageY);
             Console.CursorVisible = true;
             Console.ReadLine();
