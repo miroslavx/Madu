@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Snake
 {
@@ -14,6 +13,7 @@ namespace Snake
         {
             direction = initialDirection;
             pList = new List<Point>();
+            // Тело змейки
             for (int i = 0; i < length; i++)
             {
                 Point p = new Point(initialPos);
@@ -27,36 +27,38 @@ namespace Snake
             return pList;
         }
 
+        //Движения
         internal void Move()
         {
-            if (pList == null || !pList.Any()) return;
+            if (pList == null || pList.Count == 0) return; // Проверка что вообще змейка существует
 
-            Point tail = new Point(pList.First());
+            Point tail = new Point(pList[0]); // Получаем хвост (первый элемент)
             ConsoleColor originalBg = Console.BackgroundColor;
-            Console.BackgroundColor = Program.bgColor; // Установка фона для корректной очистки
-            tail.Clear();
-            Console.BackgroundColor = originalBg; // Восстановление фона (если важно)
+            Console.BackgroundColor = Program.bgColor;
+            tail.Clear(); // Стираем хвост с предыдущей позиции
+            Console.BackgroundColor = originalBg;
 
-            pList.RemoveAt(0);
-            Point head = GetNextPointPosition();
-            pList.Add(head);
-            head.Draw();
+            pList.RemoveAt(0); // Удаляем хвост из списка
+            Point head = GetNextPointPosition(); // Получаем новую позицию головы
+            pList.Add(head); // Добавляем голову в список
+            head.Draw(); // Отрисовываем новую голову
         }
 
+        // съела ли змейка еду
         internal bool Eat(Point food)
         {
             Point nextHead = GetNextPointPosition();
             if (nextHead.IsHit(food))
             {
-                food.sym = Program.SNAKE_SYMBOL_CONST;
-                pList.Add(food);
-                // Цвет для "новой головы" (съеденной еды) устанавливается в Game.cs/TimeGame.cs перед Draw
-                food.Draw(); // Использует текущий Console.ForegroundColor
+                food.sym = Program.SNAKE_SYMBOL_CONST; // Символ еды меняется на символ змейки
+                pList.Add(food); // Добавляем еду как новую часть головы (рост змейки)
+                food.Draw();
                 return true;
             }
             return false;
         }
 
+        // Столкновение с ножницами
         internal bool HitScissors(Point scissors)
         {
             if (scissors == null) return false;
@@ -64,13 +66,16 @@ namespace Snake
             return nextHead.IsHit(scissors);
         }
 
+        //сокращение змейки
         internal void ShortenSnake()
         {
             int currentLength = pList.Count;
-            if (currentLength <= MIN_SNAKE_LENGTH_AFTER_SCISSORS) return;
-            int segmentsToRemove = currentLength / 2;
+            if (currentLength <= MIN_SNAKE_LENGTH_AFTER_SCISSORS) return; // Не укорачивать, если змейка слишком короткая
+
+            int segmentsToRemove = currentLength / 2; // Укоротить наполовину
             if (currentLength - segmentsToRemove < MIN_SNAKE_LENGTH_AFTER_SCISSORS)
             {
+                // Корректировка, чтобы не сделать змейку короче минимальной длины
                 segmentsToRemove = currentLength - MIN_SNAKE_LENGTH_AFTER_SCISSORS;
             }
 
@@ -78,32 +83,34 @@ namespace Snake
             Console.BackgroundColor = Program.bgColor; // Установка фона для корректной очистки
             for (int i = 0; i < segmentsToRemove && pList.Count > MIN_SNAKE_LENGTH_AFTER_SCISSORS; i++)
             {
-                Point segment = pList.First();
-                segment.Clear();
-                pList.RemoveAt(0);
+                Point segment = pList[0]; // Получаем сегмент хвоста
+                segment.Clear(); 
+                pList.RemoveAt(0); // Удаляем сегмент
             }
             Console.BackgroundColor = originalBg; // Восстановление фона
         }
 
+        // Столкнулась ли голова змейки с ее хвостом
         internal bool IsHitTail()
         {
-            if (pList == null || pList.Count <= 1) return false;
-            var head = pList.Last();
-            for (int i = 0; i < pList.Count - 1; i++)
+            if (pList == null || pList.Count <= 1) return false; // Не может столкнуться, если слишком короткая
+            var head = pList[pList.Count - 1]; // Получаем голову (последний элемент)
+            for (int i = 0; i < pList.Count - 1; i++) // Проверяем столкновение со всеми сегментами, кроме головы
             {
                 if (head.IsHit(pList[i])) return true;
             }
             return false;
         }
-
+        
+        // Позиция головы
         private Point GetNextPointPosition()
         {
-            Point currentHead = pList.Last();
+            Point currentHead = pList[pList.Count - 1]; // Текущая голова (последний элемент)
             Point nextPos = new Point(currentHead);
-            nextPos.Move(1, direction);
+            nextPos.Move(1, direction); // Двигаем точку в текущем направлении
             return nextPos;
         }
-
+        //Управление клавишами движения
         public void HandleKey(ConsoleKey key)
         {
             if (key == ConsoleKey.LeftArrow && direction != Direction.RIGHT) direction = Direction.LEFT;
@@ -111,6 +118,5 @@ namespace Snake
             else if (key == ConsoleKey.UpArrow && direction != Direction.DOWN) direction = Direction.UP;
             else if (key == ConsoleKey.DownArrow && direction != Direction.UP) direction = Direction.DOWN;
         }
-        // Метод Draw() из Figure используется. Цвет устанавливается в Game.cs/TimeGame.cs.
     }
 }
