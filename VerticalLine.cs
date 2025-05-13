@@ -6,6 +6,7 @@ namespace Snake
     // Класс VerticalLine: Представляет вертикальную линию, наследуется от Figure.
     class VerticalLine : Figure
     {
+        // Создает вертикальную линию из точек
         public VerticalLine(int yUp, int yDown, int x, char sym)
         {
             pList = new List<Point>();
