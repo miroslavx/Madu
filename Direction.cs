@@ -8,4 +8,4 @@ namespace Snake
         UP,
         DOWN
     }
-} 
+}

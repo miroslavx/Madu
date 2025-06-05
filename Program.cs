@@ -3,20 +3,19 @@ using System.IO;
 
 namespace Snake
 {
-    // Класс Program: инициализирует основные компоненты, хранит глобальные настройки (цвета, звуки) и запускает главное меню.
+    // Класс Program: инициализирует основные компоненты, хранит глобальные настройки (цвета, звуки) и запускает главное меню
     class Program
     {
         public const int MAP_WIDTH = 80;
         public const int MAP_HEIGHT = 25;
         public const string SCORES_FILENAME = "scores.txt";
         public const string SOUNDS_FOLDER_NAME = "Zvuki";
-
-        public const char SNAKE_SYMBOL_CONST = '*';
+        public const char SNAKE_SYMBOL_CONST = '8';
         public const char FOOD_SYMBOL_CONST = '$';
         public const char SCISSORS_SYMBOL_CONST = 'X';
         public const char DYNAMIC_WALL_SYMBOL = '#';
 
-        // Цветовые схемы 
+        // Глобальные цветовые схемы 
         public static ConsoleColor fgColorPermanentWall = ConsoleColor.Yellow;
         public static ConsoleColor fgColorDynamicWall = ConsoleColor.DarkGray;
         public static ConsoleColor fgColorSnake = ConsoleColor.Green;
@@ -93,7 +92,7 @@ namespace Snake
             }
         }
 
-        // Генерирует строку для отображения текущей скорости игры.
+        // Строка скорости
         public static string GetSpeedDisplay(int currentDelay, int minDelay, int maxRealDelay)
         {
             if (maxRealDelay <= minDelay) return new string('+', 10); // Максимальная скорость, если диапазон некорректен

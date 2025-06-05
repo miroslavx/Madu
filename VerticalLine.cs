@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Snake
 {
-    // Класс VerticalLine: Представляет вертикальную линию, наследуется от Figure.
+    // Класс VerticalLine: Представляет вертикальную линию, наследуется от Figure
     class VerticalLine : Figure
     {
         // Создает вертикальную линию из точек

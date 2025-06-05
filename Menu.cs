@@ -4,10 +4,10 @@ using System.IO;
 
 namespace Snake
 {
-    // Класс Menu: Управляет отображением главного меню, таблицы рекордов и настройками цветовой схемы.
+    // Класс Menu: Управляет отображением главного меню, таблицы рекордов и настройками цветовой схемы
     static class Menu
     {
-        // Отображение главного меню и обработка выбора пользователя.
+        // Отображение главного меню и обработка выбора 
         public static void ShowMainMenu(out bool exitSelected)
         {
             exitSelected = false;
@@ -16,8 +16,6 @@ namespace Snake
             Console.BackgroundColor = Program.bgColor;
             Console.Clear();
             Program.SetCurrentColors(Program.fgColorText, Program.bgColor);
-
-            // Отображение заголовка меню
             int centerAlignX = (Console.BufferWidth / 2);
             Program.WriteTextAt("╔════════════════════════╗", centerAlignX - 14, 3);
             Program.WriteTextAt("║        M A D U         ║", centerAlignX - 14, 4);
@@ -39,7 +37,6 @@ namespace Snake
             }
             Program.WriteTextAt("".PadRight(menuItemWidth, '-'), centerAlignX - menuItemWidth / 2, menuY++); // Разделитель
             Program.WriteTextAt("Vali number: ", Math.Max(0, centerAlignX - 12), menuY);
-
             Console.CursorVisible = true;
             string choice = Console.ReadLine();
             Console.CursorVisible = false;
@@ -89,7 +86,6 @@ namespace Snake
             {
                 playerName = Console.ReadLine()?.Trim();
                 if (!string.IsNullOrEmpty(playerName) && playerName.Length >= 3) break;
-
                 // Сообщение об ошибке и повторный ввод
                 Program.SetCurrentColors(ConsoleColor.Red, Program.bgColor);
                 Program.WriteTextAt("Nimi peab olema vähemalt 3 tähte! Proovi uuesti: ".PadRight(Console.BufferWidth - (promptX + 1)), promptX, promptY + 1);

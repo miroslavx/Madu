@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Snake
 {
-    // Класс Walls: Управляет стенами игрового поля, включая постоянную рамку и динамические препятствия.
+    // Класс Walls: Управляет стенами игрового поля, включая постоянную рамку и динамические препятствия
     class Walls
     {
         List<Figure> permamentWallList;
@@ -30,13 +30,13 @@ namespace Snake
         public void ClearDynamicObstacles()
         {
             ConsoleColor originalBg = Console.BackgroundColor;
-            Console.BackgroundColor = Program.bgColor; // Устанавливаем фон для корректного стирания
+            Console.BackgroundColor = Program.bgColor; // Устанавливает фон для корректного стирания
             foreach (var obs in dynamicObstacles)
             {
                 obs.Clear();
             }
             dynamicObstacles.Clear();
-            Console.BackgroundColor = originalBg; // Восстанавливаем, если нужно было менять локально
+            Console.BackgroundColor = originalBg; // Если нужно было менять локально
         }
 
         public List<Figure> GetDynamicObstacles()
@@ -44,7 +44,7 @@ namespace Snake
             return dynamicObstacles;
         }
 
-        // Проверяет, столкнулась ли фигура (например, змейка) со стеной
+        // Проверяет, столкнулась ли фигура (змейка) со стеной
         internal bool IsHit(Figure figure)
         {
             foreach (var wall in permamentWallList)

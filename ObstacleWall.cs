@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Snake
 {
-    // Класс ObstacleWall: Представляет стену-препятствие, наследуется от Figure.
+    // Класс ObstacleWall: Представляет стену-препятствие
     class ObstacleWall : Figure
     {
         // Конструктор создает стену (горизонтальную или вертикальную) заданной длины x, y - начальная точка, length - длина, isHorizontal - ориентация (true - горизонтальная, false - вертикальная).
@@ -15,12 +15,12 @@ namespace Snake
             {
                 if (isHorizontal)
                 {
-                    // Добавляем точки для горизонтальной стены
+                    // Горизонтальная стена
                     pList.Add(new Point(x + i, y, sym));
                 }
                 else
                 {
-                    // Добавляем точки для вертикальной стены
+                    // Вертикальная стена
                     pList.Add(new Point(x, y + i, sym));
                 }
             }

@@ -83,9 +83,9 @@ namespace Snake
             Console.BackgroundColor = Program.bgColor; // Установка фона для корректной очистки
             for (int i = 0; i < segmentsToRemove && pList.Count > MIN_SNAKE_LENGTH_AFTER_SCISSORS; i++)
             {
-                Point segment = pList[0]; // Получаем сегмент хвоста
+                Point segment = pList[0]; // новый сегмент хвоста
                 segment.Clear(); 
-                pList.RemoveAt(0); // Удаляем сегмент
+                pList.RemoveAt(0); //удал сегмент
             }
             Console.BackgroundColor = originalBg; // Восстановление фона
         }
@@ -94,14 +94,14 @@ namespace Snake
         internal bool IsHitTail()
         {
             if (pList == null || pList.Count <= 1) return false; // Не может столкнуться, если слишком короткая
-            var head = pList[pList.Count - 1]; // Получаем голову (последний элемент)
-            for (int i = 0; i < pList.Count - 1; i++) // Проверяем столкновение со всеми сегментами, кроме головы
+            var head = pList[pList.Count - 1]; //(последний элемент)
+            for (int i = 0; i < pList.Count - 1; i++) // Проверка столкновения со всеми сегментами, кроме головы
             {
                 if (head.IsHit(pList[i])) return true;
             }
             return false;
         }
-        
+
         // Позиция головы
         private Point GetNextPointPosition()
         {
@@ -110,6 +110,7 @@ namespace Snake
             nextPos.Move(1, direction); // Двигаем точку в текущем направлении
             return nextPos;
         }
+
         //Управление клавишами движения
         public void HandleKey(ConsoleKey key)
         {

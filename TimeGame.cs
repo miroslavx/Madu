@@ -9,12 +9,12 @@ namespace Snake
     // Класс TimeGame: Змейка на время
     static class TimeGame
     {
-        const int INITIAL_SNAKE_LENGTH = 5;
-        const int INITIAL_GAME_DELAY_MS = 100;
-        const int MIN_GAME_DELAY_MS = 50;
-        const int DELAY_DECREASE_STEP_ON_EAT = 2;
-        const int INITIAL_FOOD_COUNT = 40;
-        const int TIME_ATTACK_DURATION_SECONDS = 30;
+        const int INITIAL_SNAKE_LENGTH = 3;           
+        const int INITIAL_GAME_DELAY_MS = 80;       
+        const int MIN_GAME_DELAY_MS = 30;             
+        const int DELAY_DECREASE_STEP_ON_EAT = 3;     
+        const int INITIAL_FOOD_COUNT = 30;            
+        const int TIME_ATTACK_DURATION_SECONDS = 30;  
 
         public static void PlayTimeAttackGame()
         {

@@ -25,7 +25,7 @@ namespace Snake
 
         public static void PlayClassicGame()
         {
-            // Инициализация игрового окружения
+            // Создание игрового окружения
             Console.BackgroundColor = Program.bgColor;
             Console.Clear();
             Console.CursorVisible = false;
@@ -60,7 +60,7 @@ namespace Snake
             int gameDelayMs = INITIAL_GAME_DELAY_MS;
             int lastScoreForWallSpawn = 0; // Для отслеживания появления динамических стен
 
-            // Основной игровой цикл
+            // Игровой цикл
             while (true)
             {
                 // Отображение информации (счет, скорость)
@@ -108,7 +108,7 @@ namespace Snake
                         Program.SetCurrentColors(Program.fgColorFood, Program.bgColor);
                         Point newFood = foodCreator.CreateFood(snake.GetBody(), currentScissors, walls.GetDynamicObstacles());
                         foodItems.Add(newFood);
-                        newFood.Draw(); // Замена foodItems.Last().Draw()
+                        newFood.Draw(); 
                         break; // Выход из цикла, так как за один ход можно съесть одну еду
                     }
                 }
@@ -135,7 +135,7 @@ namespace Snake
                 {
                     Program.SetCurrentColors(Program.fgColorScissors, Program.bgColor);
                     Point firstFoodItem = null;
-                    if (foodItems.Count > 0) // Замена .Any()
+                    if (foodItems.Count > 0) 
                     {
                         firstFoodItem = foodItems[0];
                     }
@@ -235,13 +235,11 @@ namespace Snake
                         foreach (Point pf in foodItems)
                         {
                             if (pf.IsHit(pObs)) { collisionDetected = true; break; }
-                        }
-                        if (collisionDetected) break;
+                        }if (collisionDetected) break;
                     }
 
                     // Проверка столкновения с ножницами
                     if (currentScissors != null && currentScissors.IsHit(pObs)) { collisionDetected = true; break; }
-
                     // Проверка столкновения с другими существующими препятствиями
                     if (existingObstacles != null)
                     {

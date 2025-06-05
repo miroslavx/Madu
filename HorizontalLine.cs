@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Snake
 {
-    // Класс HorizontalLine: Представляет горизонтальную линию, наследуется от Figure.
+    // Класс HorizontalLine: Представляет горизонтальную линию
     class HorizontalLine : Figure
     {
         public HorizontalLine(int xLeft, int xRight, int y, char sym)
